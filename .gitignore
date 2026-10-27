@@ -1,0 +1,25 @@
+# Build artifacts — never publish compiled images: ESPHome bakes WiFi
+# credentials and the API encryption key into the binary.
+*.bin
+*.elf
+*.map
+.esphome/
+build/
+
+# Secrets
+secrets.yaml
+!secrets.yaml.example
+*.key
+*.pem
+
+# Live Zigbee2MQTT state (contains network key, PAN ID, device database)
+zigbee2mqtt/data/
+configuration.yaml
+!configuration.example.yaml
+coordinator_backup.json
+database.db*
+log/
+
+__pycache__/
+*.pyc
+.DS_Store

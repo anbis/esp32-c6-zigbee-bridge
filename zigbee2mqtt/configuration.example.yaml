@@ -1,0 +1,40 @@
+# Zigbee2MQTT #2 — ESP32-C6 ZBOSS coordinator over the ESP32-C3 WiFi bridge.
+#
+# Copy to the add-on's data_path (default /config/zigbee2mqtt_2/configuration.yaml)
+# and edit. Zigbee2MQTT rewrites this file on first start, replacing the GENERATE
+# placeholders with the real pan_id, ext_pan_id and network_key.
+#
+# The live file therefore contains your network key — treat it as a secret and
+# never commit it.
+
+version: 5
+
+serial:
+  adapter: zboss
+  # IP of the ESP32-C3 bridge. Give it a DHCP reservation.
+  port: tcp://BRIDGE_IP:6638
+  baudrate: 115200
+
+mqtt:
+  server: mqtt://MQTT_BROKER_IP:1883
+  # Must differ from your first Zigbee2MQTT instance.
+  base_topic: zigbee2mqtt_2
+  # user: mqtt_user
+  # password: mqtt_password
+
+homeassistant:
+  enabled: true
+
+frontend:
+  enabled: true
+  port: 8099
+
+advanced:
+  # Pick a channel far from your existing Zigbee network and your WiFi.
+  channel: 25
+  pan_id: GENERATE
+  ext_pan_id: GENERATE
+  network_key: GENERATE
+  # ESP32-C6 has an integrated PA: up to +20 dBm.
+  transmit_power: 20
+  log_level: info

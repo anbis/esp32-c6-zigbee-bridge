@@ -1,0 +1,65 @@
+# ESP32-C3 SuperMini: WiFi <-> UART bridge for ESP32-C6 ZBOSS coordinator
+# Wiring: C3 GPIO21 (TX) -> C6 GPIO23 (RX), C3 GPIO20 (RX) <- C6 GPIO22 (TX), GND-GND
+# Zigbee2MQTT #2: adapter zboss, port tcp://<this-ip>:6638
+esphome:
+  name: zigbee-bridge
+  friendly_name: Zigbee Bridge C6
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: esp-idf
+
+logger:
+  hardware_uart: USB_SERIAL_JTAG
+
+api:
+  encryption:
+    key: !secret api_key
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  power_save_mode: none
+  ap:
+    ssid: "Zigbee-Bridge Fallback"
+
+captive_portal:
+
+external_components:
+  - source:
+      type: local
+      path: components
+
+uart:
+  id: uart_zb
+  tx_pin: GPIO21
+  rx_pin: GPIO20
+  baud_rate: 115200
+  rx_buffer_size: 2048
+
+stream_server:
+  uart_id: uart_zb
+  port: 6638
+  buffer_size: 1024
+
+binary_sensor:
+  - platform: stream_server
+    connected:
+      name: "Z2M Connected"
+
+sensor:
+  - platform: wifi_signal
+    name: "WiFi Signal"
+    update_interval: 60s
+  - platform: uptime
+    name: "Uptime"
+
+text_sensor:
+  - platform: wifi_info
+    ip_address:
+      name: "IP Address"
